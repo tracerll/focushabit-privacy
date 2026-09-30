@@ -1,0 +1,18 @@
+name: Temporary Tailscale app handoff
+on:
+  pull_request:
+    branches: [main]
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Rebuild ZIP
+        run: |
+          xxd -r -p TailscaleHomeLAN.hex > TailscaleHomeLAN.app.zip
+          shasum -a 256 TailscaleHomeLAN.app.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: TailscaleHomeLAN-app
+          path: TailscaleHomeLAN.app.zip
+          if-no-files-found: error
